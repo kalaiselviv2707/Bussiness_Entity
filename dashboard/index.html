@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ENTITYRESOLVE AI &mdash; Business Entity Resolution Platform</title>
+<link rel="stylesheet" href="/static/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="bg-grid" aria-hidden="true"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="brand-logo"><span class="logo-diamond">&#9672;</span></div>
+    <div class="brand-text">
+      <div class="brand-name">ENTITYRESOLVE</div>
+      <div class="brand-tag">AI Platform</div>
+    </div>
+  </div>
+  <div class="nav-section-label">NAVIGATION</div>
+  <nav id="mainNav">
+    <a href="#overview"   class="nav-link active" data-section="overview"><span class="ni">&#11041;</span><span class="nl">Dashboard</span></a>
+    <a href="#matching"   class="nav-link" data-section="matching"><span class="ni">&#9678;</span><span class="nl">Entity Matching</span></a>
+    <a href="#candidates" class="nav-link" data-section="candidates"><span class="ni">&#8983;</span><span class="nl">Candidate Analysis</span></a>
+    <a href="#model"      class="nav-link" data-section="model"><span class="ni">&#8767;</span><span class="nl">Model Analytics</span></a>
+    <a href="#features"   class="nav-link" data-section="features"><span class="ni">&#8779;</span><span class="nl">Feature Importance</span></a>
+    <a href="#pipeline"   class="nav-link" data-section="pipeline"><span class="ni">&#8674;</span><span class="nl">Pipeline</span></a>
+    <a href="#results"    class="nav-link" data-section="results"><span class="ni">&#9776;</span><span class="nl">Data Explorer</span></a>
+    <a href="#system"     class="nav-link" data-section="system"><span class="ni">&#9673;</span><span class="nl">System Status</span></a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sf-status"><span class="dot" id="statusDot"></span><span id="statusText">Connecting&hellip;</span></div>
+    <div class="sf-engine"><span class="dot ok-static"></span>ML Engine Active</div>
+    <div class="sf-copy">Amazon ML Challenge 2025</div>
+  </div>
+</aside>
+<div class="main" id="main">
+  <header class="topbar">
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle menu">&#9776;</button>
+    <div class="topbar-title">
+      <h1>ENTITY RESOLUTION <span class="accent">AI</span></h1>
+      <p>Resolve &bull; Match &bull; Analyze &bull; Discover &mdash; AI-Powered Business Entity Matching Platform</p>
+    </div>
+    <div class="topbar-right">
+      <div class="health-pills" id="healthPills"></div>
+      <span class="live-badge" id="liveBadge">&#9679; LIVE</span>
+      <button class="btn-refresh" id="refreshBtn">&#10227; Refresh</button>
+    </div>
+  </header>
+  <div id="errorBanner" class="error-banner" hidden></div>
+
+  <section id="overview" class="section">
+    <div class="sec-hdr">
+      <div><div class="sec-title">Dashboard Overview</div><div class="sec-sub">Real-time statistics from the entity resolution pipeline</div></div>
+      <span class="sec-badge">LIVE DATA</span>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi-card" id="kc0"><div class="kpi-sk"></div></div>
+      <div class="kpi-card" id="kc1"><div class="kpi-sk"></div></div>
+      <div class="kpi-card" id="kc2"><div class="kpi-sk"></div></div>
+      <div class="kpi-card" id="kc3"><div class="kpi-sk"></div></div>
+      <div class="kpi-card" id="kc4"><div class="kpi-sk"></div></div>
+      <div class="kpi-card" id="kc5"><div class="kpi-sk"></div></div>
+    </div>
+    <div class="chart-row">
+      <div class="card"><div class="card-hdr">Match Distribution</div><div class="donut-wrap"><canvas id="matchDonut"></canvas><div class="donut-label" id="donutLabel"></div></div></div>
+      <div class="card"><div class="card-hdr">Resolution Funnel</div><div class="ch h240"><canvas id="funnelChart"></canvas></div></div>
+      <div class="card"><div class="card-hdr">Matches per Entity</div><div class="ch h240"><canvas id="matchDistChart"></canvas></div></div>
+    </div>
+  </section>
+
+  <section id="matching" class="section">
+    <div class="sec-hdr"><div><div class="sec-title">Entity Matching</div><div class="sec-sub">Search, filter and explore all entity match results</div></div></div>
+    <div class="card">
+      <div class="toolbar">
+        <input id="searchInput" type="search" placeholder="&#128269; Search Source 1 ID or matched entity ID..." autocomplete="off">
+        <div class="seg-group" id="filters">
+          <button data-status="all" class="seg-btn active">All</button>
+          <button data-status="matched" class="seg-btn">Matched</button>
+          <button data-status="unmatched" class="seg-btn">Unmatched</button>
+        </div>
+        <span class="result-count" id="resultCount"></span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Source 1 Entity ID</th><th>Matched Entity IDs</th><th>Candidates</th><th>Matches</th><th>Status</th></tr></thead>
+          <tbody id="tbody"><tr><td colspan="6" class="tc muted">Loading&hellip;</td></tr></tbody>
+        </table>
+      </div>
+      <div class="pager">
+        <button class="btn ghost" id="prevBtn" disabled>&#8249; Prev</button>
+        <div class="page-numbers" id="pageNumbers"></div>
+        <button class="btn ghost" id="nextBtn" disabled>Next &#8250;</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="candidates" class="section">
+    <div class="sec-hdr"><div><div class="sec-title">Candidate Analysis</div><div class="sec-sub">Blocking quality and candidate pair statistics</div></div></div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-hdr">Candidate Statistics</div>
+        <div class="stat-grid">
+          <div class="stat-box"><div class="stat-lbl">Avg / Entity</div><div class="stat-val accent" id="cAvg">-</div></div>
+          <div class="stat-box"><div class="stat-lbl">Max / Entity</div><div class="stat-val" id="cMax">-</div></div>
+          <div class="stat-box"><div class="stat-lbl">Total Candidates</div><div class="stat-val" id="cTotal">-</div></div>
+          <div class="stat-box"><div class="stat-lbl">Final Matches</div><div class="stat-val good" id="cFinal">-</div></div>
+          <div class="stat-box"><div class="stat-lbl">Rejected</div><div class="stat-val warn" id="cRejected">-</div></div>
+          <div class="stat-box"><div class="stat-lbl">No Candidates</div><div class="stat-val" id="cNone">-</div></div>
+        </div>
+        <div class="prog-wrap">
+          <div class="prog-lbl"><span>Match Rate from Candidates</span><span id="matchRatePct">-</span></div>
+          <div class="prog-bar"><div class="prog-fill" id="matchRateBar"></div></div>
+        </div>
+      </div>
+      <div class="card"><div class="card-hdr">Candidate Distribution</div><div class="ch h280"><canvas id="candDistChart"></canvas></div></div>
+    </div>
+    <div class="two-col">
+      <div class="card" id="countryCard"><div class="card-hdr">Country Distribution &mdash; Matched vs Unmatched</div><div class="ch h300"><canvas id="countryChart"></canvas></div></div>
+      <div class="card">
+        <div class="card-hdr">Top 10 Entities by Candidate Count</div>
+        <div class="table-wrap"><table><thead><tr><th>#</th><th>Source 1 Entity ID</th><th>Candidates</th><th>Bar</th></tr></thead><tbody id="topEntitiesBody"></tbody></table></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="model" class="section">
+    <div class="sec-hdr">
+      <div><div class="sec-title">Model Analytics</div><div class="sec-sub">Validation metrics, confusion matrix and model comparison</div></div>
+      <span class="badge" id="modelBadge">-</span>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-hdr">Performance Metrics</div>
+        <div class="metric-grid">
+          <div class="metric-box c-accent"><div class="metric-lbl">Precision</div><div class="metric-val" id="mPrecision">-</div><div class="mbar"><div class="mfill" id="barPrecision"></div></div></div>
+          <div class="metric-box c-indigo"><div class="metric-lbl">Recall</div><div class="metric-val" id="mRecall">-</div><div class="mbar"><div class="mfill" id="barRecall"></div></div></div>
+          <div class="metric-box c-good"><div class="metric-lbl">F0.5 Score</div><div class="metric-val" id="mF05">-</div><div class="mbar"><div class="mfill" id="barF05"></div></div></div>
+          <div class="metric-box"><div class="metric-lbl">Threshold</div><div class="metric-val" id="mThreshold">-</div></div>
+        </div>
+        <div class="conf-row">
+          <div class="conf-box tp"><div class="conf-val" id="confTP">-</div><div class="conf-lbl">True Positives</div></div>
+          <div class="conf-box fp"><div class="conf-val" id="confFP">-</div><div class="conf-lbl">False Positives</div></div>
+          <div class="conf-box fn"><div class="conf-val" id="confFN">-</div><div class="conf-lbl">False Negatives</div></div>
+        </div>
+        <p class="note" id="modelNote"></p>
+      </div>
+      <div class="card"><div class="card-hdr">Metric Radar</div><div class="ch h300"><canvas id="radarChart"></canvas></div></div>
+    </div>
+    <div class="card" id="modelCompCard">
+      <div class="card-hdr">Model Comparison</div>
+      <div class="table-wrap"><table><thead><tr><th>Model</th><th>F0.5</th><th>Precision</th><th>Recall</th><th>Threshold</th><th>TP</th><th>FP</th><th>FN</th><th>Selected</th></tr></thead><tbody id="modelCompBody"></tbody></table></div>
+    </div>
+    <div class="card"><div class="card-hdr">All Models &mdash; F0.5 Comparison</div><div class="ch h240"><canvas id="modelCompChart"></canvas></div></div>
+  </section>
+
+  <section id="features" class="section">
+    <div class="sec-hdr"><div><div class="sec-title">Feature Importance</div><div class="sec-sub">Top predictive features extracted from the trained ML model</div></div></div>
+    <div class="card" id="featCard">
+      <div class="card-hdr">Feature Importance (from trained model)</div>
+      <div class="ch h420"><canvas id="featChart"></canvas></div>
+    </div>
+  </section>
+
+  <section id="pipeline" class="section">
+    <div class="sec-hdr"><div><div class="sec-title">Entity Resolution Pipeline</div><div class="sec-sub">End-to-end processing flow with live statistics</div></div></div>
+    <div class="card">
+      <div class="pipe-flow">
+        <div class="pipe-step"><div class="pipe-num">01</div><div class="pipe-ico">&#128194;</div><div class="pipe-lbl">Data Sources</div><div class="pipe-sub">Source 1 / 2 / 3 TSV</div></div>
+        <div class="pipe-arr">&#8594;</div>
+        <div class="pipe-step"><div class="pipe-num">02</div><div class="pipe-ico">&#128288;</div><div class="pipe-lbl">Preprocessing</div><div class="pipe-sub">NFKC &middot; Indic transliteration &middot; accents</div></div>
+        <div class="pipe-arr">&#8594;</div>
+        <div class="pipe-step"><div class="pipe-num">03</div><div class="pipe-ico">&#128269;</div><div class="pipe-lbl">Blocking</div><div class="pipe-sub">TF-IDF sparse cosine &middot; same-country</div></div>
+        <div class="pipe-arr">&#8594;</div>
+        <div class="pipe-step"><div class="pipe-num">04</div><div class="pipe-ico">&#9881;</div><div class="pipe-lbl">Feature Engineering</div><div class="pipe-sub">32 features &middot; name &middot; address &middot; country</div></div>
+        <div class="pipe-arr">&#8594;</div>
+        <div class="pipe-step"><div class="pipe-num">05</div><div class="pipe-ico">&#129302;</div><div class="pipe-lbl">ML Classifier</div><div class="pipe-sub" id="pipeModelName">HistGradientBoosting</div></div>
+        <div class="pipe-arr">&#8594;</div>
+        <div class="pipe-step"><div class="pipe-num">06</div><div class="pipe-ico">&#127919;</div><div class="pipe-lbl">F0.5 Threshold</div><div class="pipe-sub" id="pipeThreshold">Optimised</div></div>
+        <div class="pipe-arr">&#8594;</div>
+        <div class="pipe-step"><div class="pipe-num">07</div><div class="pipe-ico">&#128202;</div><div class="pipe-lbl">Output</div><div class="pipe-sub">TSV results + dashboard</div></div>
+      </div>
+      <div class="pipe-stats">
+        <div class="ps"><span class="ps-lbl">Blocking Recall</span><span class="ps-val" id="pipeBlockingRecall">-</span></div>
+        <div class="ps"><span class="ps-lbl">Candidate Pairs</span><span class="ps-val" id="pipeCandPairs">-</span></div>
+        <div class="ps"><span class="ps-lbl">Training Pairs</span><span class="ps-val" id="pipeTrainPairs">-</span></div>
+        <div class="ps"><span class="ps-lbl">Positive Pairs</span><span class="ps-val" id="pipePosPairs">-</span></div>
+        <div class="ps"><span class="ps-lbl">Features</span><span class="ps-val" id="pipeFeatures">-</span></div>
+        <div class="ps"><span class="ps-lbl">Record Limit</span><span class="ps-val" id="pipeLimit">-</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="results" class="section">
+    <div class="sec-hdr"><div><div class="sec-title">Data Explorer</div><div class="sec-sub">Browse all source records and their match results</div></div></div>
+    <div class="card">
+      <div class="toolbar">
+        <input id="searchInput2" type="search" placeholder="&#128269; Search entity ID..." autocomplete="off">
+        <div class="seg-group" id="filters2">
+          <button data-status="all" class="seg-btn active">All</button>
+          <button data-status="matched" class="seg-btn">Matched</button>
+          <button data-status="unmatched" class="seg-btn">Unmatched</button>
+        </div>
+        <span class="result-count" id="resultCount2"></span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Source 1 Entity ID</th><th>Matched Entity IDs</th><th>Candidates</th><th>Matches</th><th>Status</th></tr></thead>
+          <tbody id="tbody2"><tr><td colspan="6" class="tc muted">Loading&hellip;</td></tr></tbody>
+        </table>
+      </div>
+      <div class="pager">
+        <button class="btn ghost" id="prevBtn2" disabled>&#8249; Prev</button>
+        <div class="page-numbers" id="pageNumbers2"></div>
+        <button class="btn ghost" id="nextBtn2" disabled>Next &#8250;</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="system" class="section">
+    <div class="sec-hdr"><div><div class="sec-title">System Status</div><div class="sec-sub">Health check for all pipeline components</div></div></div>
+    <div class="sys-grid" id="sysGrid">
+      <div class="sys-sk"></div><div class="sys-sk"></div><div class="sys-sk"></div><div class="sys-sk"></div>
+    </div>
+  </section>
+
+</div>
+<script src="/static/script.js"></script>
+</body>
+</html>
