@@ -1,0 +1,76 @@
+{
+  "precision": 0.8333,
+  "recall": 0.7692,
+  "f0_5": 0.8197,
+  "threshold": 0.09,
+  "tp": 10,
+  "fp": 2,
+  "fn": 3,
+  "model": "HistGradientBoosting",
+  "model_comparison": [
+    {
+      "threshold": 0.86,
+      "precision": 0.8889,
+      "recall": 0.6154,
+      "f0_5": 0.8163,
+      "tp": 8,
+      "fp": 1,
+      "fn": 5,
+      "model": "RandomForest"
+    },
+    {
+      "threshold": 0.09,
+      "precision": 0.8333,
+      "recall": 0.7692,
+      "f0_5": 0.8197,
+      "tp": 10,
+      "fp": 2,
+      "fn": 3,
+      "model": "HistGradientBoosting"
+    },
+    {
+      "threshold": 0.94,
+      "precision": 0.3824,
+      "recall": 1.0,
+      "f0_5": 0.4362,
+      "tp": 13,
+      "fp": 21,
+      "fn": 0,
+      "model": "LogisticRegression"
+    }
+  ],
+  "training": {
+    "record_limit": 10000,
+    "source1_records": 10000,
+    "source23_records": 20000,
+    "true_pairs_in_scope": 68,
+    "true_pairs_outside_scope": 34684,
+    "blocking_recall": 0.9853,
+    "candidate_pairs": 290523,
+    "training_pairs": 290524,
+    "positive_pairs": 68,
+    "feature_count": 32,
+    "validation_split": "grouped by Source 1 entity, 20% of entities",
+    "trained_at": "2026-10-03T20:21:00"
+  },
+  "prediction": {
+    "source1_records": 10000,
+    "matched_entities": 104,
+    "candidate_pairs": 301166,
+    "final_matches": 104,
+    "by_country": {
+      "France": {
+        "total": 1490,
+        "matched": 28
+      },
+      "India": {
+        "total": 4619,
+        "matched": 39
+      },
+      "US": {
+        "total": 3891,
+        "matched": 37
+      }
+    }
+  }
+}
